@@ -27,15 +27,16 @@
         #timer {
             font-size: 10rem;
             text-align: center;
-            margin-top: 0.1rem;
+            margin-top: -2rem;
+
             font-family: 'Arial', sans-serif;
             box-shadow: none;
-            margin-bottom: 0.1rem;
+            margin-bottom: 0rem;
         }
 
         .buttonArea {
             text-align: center;
-            margin-top: 0.5rem;
+            margin-top: 0rem;
         }
 
         .buttonArea button {
@@ -160,11 +161,13 @@
 
             const minutes = String(Math.floor(elapsedTime / 60000)).padStart(2, '0');
             const seconds = String(Math.floor((elapsedTime % 60000) / 1000)).padStart(2, '0');
-            const milliseconds = String(elapsedTime % 1000).padStart(3, '0');
-            console.log(elapsedTime);
+            // 2ケタ固定表示（センチ秒）
+            const centiseconds = String(Math.floor((elapsedTime % 1000) / 10)).padStart(2, '0');
+
             timerM.textContent = minutes;
             timerS.textContent = seconds;
-            timerMS.textContent = milliseconds;
+            timerMS.textContent = centiseconds;
+
             if (elapsedTime >= effectTimeM[0] * 60000 && elapsedTime < (effectTimeM[0] * 60000 + duringEffect) ||
                 elapsedTime >= effectTimeM[1] * 60000 && elapsedTime < (effectTimeM[1] * 60000 + duringEffect) ||
                 elapsedTime >= effectTimeM[2] * 60000 && elapsedTime < (effectTimeM[2] * 60000 + duringEffect)) {
