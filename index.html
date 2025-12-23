@@ -45,6 +45,27 @@
             cursor: pointer;
         }
 
+        #start {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 0.3rem;
+        }
+
+        #stop {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 0.3rem;
+        }
+
+        #reset {
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 0.3rem;
+        }
+
         .surper {
             font-size: 2rem;
             vertical-align: super;
@@ -95,7 +116,7 @@
 
 <body>
     <h1 id="jst"><span>00</span>:<span>00</span>:<span>00</span></h1>
-    <h1 id="timer"><span>00</span>:<span>00</span>:<span>00</span></h1>
+    <h1 id="timer"><span id="timer-m">00</span>:<span id="timer-s">00</span>:<span id="timer-ms">00</span></h1>
     <div class="buttonArea">
         <button id="start">スタート</button>
         <button id="stop">ストップ</button>
@@ -122,6 +143,9 @@
         let timerInterval;
 
         const timerEl = document.getElementById('timer');
+        const timerM = document.getElementById('timer-m');
+        const timerS = document.getElementById('timer-s');
+        const timerMS = document.getElementById('timer-ms');
         const startBtn = document.getElementById('start');
         const stopBtn = document.getElementById('stop');
         const resetBtn = document.getElementById('reset');
@@ -137,7 +161,9 @@
             const seconds = String(Math.floor((elapsedTime % 60000) / 1000)).padStart(2, '0');
             const milliseconds = String(elapsedTime % 1000).padStart(3, '0');
             console.log(elapsedTime);
-            timerEl.textContent = `${minutes}:${seconds}:${milliseconds}`;
+            timerM.textContent = minutes;
+            timerS.textContent = seconds;
+            timerMS.textContent = milliseconds;
             if (elapsedTime >= effectTimeM[0] * 60000 && elapsedTime < (effectTimeM[0] * 60000 + duringEffect) ||
                 elapsedTime >= effectTimeM[1] * 60000 && elapsedTime < (effectTimeM[1] * 60000 + duringEffect) ||
                 elapsedTime >= effectTimeM[2] * 60000 && elapsedTime < (effectTimeM[2] * 60000 + duringEffect)) {
@@ -163,7 +189,10 @@
             clearInterval(timerInterval);
             timerInterval = null;
             elapsedTime = 0;
-            timerEl.textContent = '00:00:000';
+            timerM.textContent = '00';
+            timerS.textContent = '00';
+            timerMS.textContent = '00';
+            document.body.classList.remove('surper');
         });
     </script>
 </body>
