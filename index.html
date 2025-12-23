@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>タイマー</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            box-shadow: none;
+            border: none;
+        }
+
+        #jst {
+            font-size: 5rem;
+            text-align: center;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'Arial', sans-serif;
+            color: gray;
+            box-shadow: none;
+        }
+
+        #timer {
+            font-size: 10rem;
+            text-align: center;
+            margin-top: 1%;
+            font-family: 'Arial', sans-serif;
+            box-shadow: none;
+            margin-bottom: 1%;
+        }
+
+        .buttonArea {
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        .buttonArea button {
+            font-size: 2rem;
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+
+        .surper {
+            font-size: 2rem;
+            vertical-align: super;
+
+            /* 派手なゲーミング風背景 */
+            background: linear-gradient(120deg,
+                    #ff00ff,
+                    #00ffff,
+                    #ffff00,
+                    #ff0000,
+                    #00ff00,
+                    #0000ff,
+                    #ff00ff);
+            background-size: 400% 400%;
+            animation: gamingGlow 3s linear infinite;
+
+            color: #ffffff;
+            padding: 0.2em 0.4em;
+            border-radius: 0.4em;
+
+            box-shadow:
+                0 0 10px rgba(255, 0, 255, 0.8),
+                0 0 20px rgba(0, 255, 255, 0.8),
+                0 0 30px rgba(255, 255, 0, 0.8);
+            text-shadow:
+                0 0 5px rgba(0, 0, 0, 0.9),
+                0 0 10px rgba(0, 0, 0, 0.9);
+        }
+
+        @keyframes gamingGlow {
+            0% {
+                background-position: 0% 50%;
+                filter: hue-rotate(0deg);
+            }
+
+            50% {
+                background-position: 100% 50%;
+                filter: hue-rotate(180deg);
+            }
+
+            100% {
+                background-position: 0% 50%;
+                filter: hue-rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="jst"><span>00</span>:<span>00</span>:<span>00</span></h1>
+    <h1 id="timer"><span>00</span>:<span>00</span>:<span>00</span></h1>
+    <div class="buttonArea">
+        <button id="start">スタート</button>
+        <button id="stop">ストップ</button>
+        <button id="reset">リセット</button>
+    </div>
+    <script>
+        function fmtJST(d = new Date()) {
+            return new Intl.DateTimeFormat('ja-JP', {
+                timeZone: 'Asia/Tokyo',
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit',
+                hourCycle: 'h23' // 24時間制
+            }).format(d);
+        }
+
+        const el = document.getElementById('jst');
+        function tick() { el.textContent = fmtJST(); }
+        tick();
+        setInterval(tick, 1000);
+    </script>
+    <script>
+        let startTime = 0;
+        let elapsedTime = 0;
+        let timerInterval;
+
+        const timerEl = document.getElementById('timer');
+        const startBtn = document.getElementById('start');
+        const stopBtn = document.getElementById('stop');
+        const resetBtn = document.getElementById('reset');
+        const effectTimeM = [
+            6, 8, 10
+        ]
+        const duringEffect = 3000; // エフェクトの持続時間（ミリ秒）
+        function updateTimer() {
+            const currentTime = Date.now();
+            elapsedTime = currentTime - startTime;
+
+            const minutes = String(Math.floor(elapsedTime / 60000)).padStart(2, '0');
+            const seconds = String(Math.floor((elapsedTime % 60000) / 1000)).padStart(2, '0');
+            const milliseconds = String(elapsedTime % 1000).padStart(3, '0');
+            console.log(elapsedTime);
+            timerEl.textContent = `${minutes}:${seconds}:${milliseconds}`;
+            if (elapsedTime >= effectTimeM[0] * 60000 && elapsedTime < (effectTimeM[0] * 60000 + duringEffect) ||
+                elapsedTime >= effectTimeM[1] * 60000 && elapsedTime < (effectTimeM[1] * 60000 + duringEffect) ||
+                elapsedTime >= effectTimeM[2] * 60000 && elapsedTime < (effectTimeM[2] * 60000 + duringEffect)) {
+                document.body.classList.add('surper');
+            } else {
+                document.body.classList.remove('surper');
+            }
+        }
+
+        startBtn.addEventListener('click', () => {
+            if (!timerInterval) {
+                startTime = Date.now() - elapsedTime;
+                timerInterval = setInterval(updateTimer, 100);
+            }
+        });
+
+        stopBtn.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        });
+
+        resetBtn.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            elapsedTime = 0;
+            timerEl.textContent = '00:00:000';
+        });
+    </script>
+</body>
+
+</html>
